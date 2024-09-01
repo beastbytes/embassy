@@ -4,6 +4,8 @@ use core::marker::PhantomData;
 
 use embassy_hal_internal::{into_ref, PeripheralRef};
 
+use stm32_metapac::timer::vals::{Sms as SlaveMode};
+
 use super::low_level::{CountingMode, OutputCompareMode, OutputPolarity, Timer};
 use super::{Channel, Channel1Pin, Channel2Pin, Channel3Pin, Channel4Pin, GeneralInstance4Channel};
 use crate::gpio::{AfType, AnyPin, OutputType, Speed};
@@ -147,6 +149,11 @@ impl<'d, T: GeneralInstance4Channel> SimplePwm<'d, T> {
     /// Set the output compare mode for a given channel.
     pub fn set_output_compare_mode(&mut self, channel: Channel, mode: OutputCompareMode) {
         self.inner.set_output_compare_mode(channel, mode);
+    }
+
+    /// Set Timer Slave Mode
+    pub fn set_slave_mode(&self, sms: SlaveMode) {
+        self.inner.set_slave_mode(sms: SlaveMode);
     }
 
     /// Generate a sequence of PWM waveform
