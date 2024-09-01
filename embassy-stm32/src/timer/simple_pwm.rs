@@ -1,10 +1,10 @@
 //! Simple PWM driver.
 
+pub use stm32_metapac::timer::vals::{Sms as SlaveMode, Ts as TriggerSource};
+
 use core::marker::PhantomData;
 
 use embassy_hal_internal::{into_ref, PeripheralRef};
-
-use stm32_metapac::timer::vals::{Sms as SlaveMode};
 
 use super::low_level::{CountingMode, OutputCompareMode, OutputPolarity, Timer};
 use super::{Channel, Channel1Pin, Channel2Pin, Channel3Pin, Channel4Pin, GeneralInstance4Channel};
@@ -156,6 +156,11 @@ impl<'d, T: GeneralInstance4Channel> SimplePwm<'d, T> {
         self.inner.set_slave_mode(sms: SlaveMode);
     }
 
+    /// Set Timer Trigger Source
+    pub fn set_trigger_source(&self, ts: TriggerSource) {
+        self.inner.set_trigger_source(ts: TriggerSource);
+    }
+
     /// Generate a sequence of PWM waveform
     ///
     /// Note:  
@@ -203,7 +208,7 @@ impl<'d, T: GeneralInstance4Channel> SimplePwm<'d, T> {
                 self.inner.regs_1ch().ccr(channel.index()).as_ptr() as *mut _,
                 dma_transfer_option,
             )
-            .await
+                .await
         };
 
         // restore output compare state
